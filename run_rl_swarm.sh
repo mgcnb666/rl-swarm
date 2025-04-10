@@ -380,12 +380,12 @@ fi
 
 echo -e "\n${GREEN}${BOLD}Good luck in the swarm! Your training session is about to begin.\n${NC}"
 
-# 特别提示有关DHT连接优化
-echo -e "${BLUE}${BOLD}注意：${NC} 脚本已针对DHT守护进程启动超时问题进行优化，增加了启动超时和重试机制。"
-echo -e "${BLUE}如果仍然遇到网络问题，建议：${NC}"
-echo -e "1. 检查网络连接和防火墙设置"
-echo -e "2. 确保端口38331未被占用"
-echo -e "3. 如仍有问题，可尝试删除swarm.pem重新生成身份\n"
+# 特别提示有关DHT连接优化 (使用英文避免编码问题)
+echo -e "${BLUE}${BOLD}NOTE:${NC} This script has been optimized for DHT daemon startup timeout issues."
+echo -e "${BLUE}If you still encounter network problems, try:${NC}"
+echo -e "1. Check your network connection and firewall settings"
+echo -e "2. Ensure port 38331 is not in use"
+echo -e "3. If problems persist, try deleting swarm.pem to generate a new identity\n"
 
 # Create log directory if it doesn't exist
 LOG_DIR="$ROOT/logs"
@@ -399,13 +399,14 @@ start_training() {
     
     # 增加详细日志输出，帮助排查问题
     export DHT_VERBOSE=1
+    # 设置DHT启动超时时间(秒)
+    export HIVEMIND_DHT_STARTUP_TIMEOUT=120
     
     if [ -n "$ORG_ID" ]; then
         python -m hivemind_exp.gsm8k.train_single_gpu \
             --hf_token "$HUGGINGFACE_ACCESS_TOKEN" \
             --identity_path "$IDENTITY_PATH" \
             --modal_org_id "$ORG_ID" \
-            --p2p_daemon_startup_timeout 120 \
             --config "$CONFIG_PATH" > "$log_file" 2>&1 &
     else
         python -m hivemind_exp.gsm8k.train_single_gpu \
@@ -414,7 +415,6 @@ start_training() {
             --public_maddr "$PUB_MULTI_ADDRS" \
             --initial_peers "$PEER_MULTI_ADDRS" \
             --host_maddr "$HOST_MULTI_ADDRS" \
-            --p2p_daemon_startup_timeout 120 \
             --config "$CONFIG_PATH" > "$log_file" 2>&1 &
     fi
     
