@@ -481,7 +481,7 @@ while true; do
             current_time=$(date +%s)
             time_diff=$((current_time - last_modified))
             
-            if [ $time_diff -gt 1200 ]; then  # 1200 seconds = 20 minutes
+            if [ $time_diff -gt 1900 ]; then  # 1200 seconds = 20 minutes
                 echo -e "\n${RED}No log output for 20 minutes. Training may be stuck. Killing process and restarting...${NC}"
                 kill $TRAIN_PID 2>/dev/null || true
                 # 确保所有相关的训练进程都被终止
